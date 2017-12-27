@@ -1,0 +1,47 @@
+
+%try zero init thetas and watching the affection for backpropgation
+
+%% Initialization
+clear ; close all; clc
+
+%% Setup the parameters you will use for this exercise
+%% simple for watching
+input_layer_size  = 2;  
+hidden_layer_size = 4;   
+num_labels = 3;   
+
+
+Theta1 = zeros(hidden_layer_size, input_layer_size+1) %4x3
+Theta2 = zeros(num_labels, hidden_layer_size+1) %3x5
+
+X = rand(1, input_layer_size) % one input 1x2
+Y = rand(1, num_labels) %1x3
+
+for i=1:2
+
+%feedforward
+
+A1 = [ones(1, 1) X]   %1x3
+Z2 = A1 * Theta1'     %1x4
+A2 = sigmoid(Z2)     %1x4
+A2 = [ones(1, 1) A2] %1x5
+Z3 = A2 * Theta2'    %1x3
+A3 = sigmoid(Z3)     %1x3
+
+Jm = (Y .* log(A3) + (1-Y) .* log(1-A3))  %1x3
+J = 1/num_labels * sum(Jm)
+
+%backprogation
+delta3 = A3 - Y %1x3
+
+delta2 = delta3 * Theta2(:,2:end) .* sigmoidGradient(Z2) %1x4
+Delta2 = delta3' * A2      %3x1 * 1x5 -> 3x5
+Delta1 = delta2' * A1      %4x1 * 1x3 -> 4x3
+Theta1_grad = Delta1 / 1
+Theta2_grad = Delta2 / 1
+
+Theta1 = Theta1 + 0.1 * Theta1_grad
+Theta2 = Theta2 + 0.1 * Theta2_grad
+
+end
+                         
